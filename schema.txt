@@ -1,0 +1,179 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String         @id @default(auto()) @map("_id")
+  name            String
+  email           String         @unique
+  password        String
+  role            Role           @default(STUDENT)
+  branch          String
+  createdAt       DateTime       @default(now())
+
+  borrowings      Borrowing[]
+  reservations    Reservation[]
+  fines           Fine[]
+  reviews         Review[]
+  notifications   Notification[]
+  readingStats    ReadingChallenge?
+}
+
+enum Role {
+  ADMIN
+  LIBRARIAN
+  STUDENT
+}
+
+model Item {
+  id              String     @id @default(auto()) @map("_id")
+  title           String
+  type            ItemType
+  author          String?
+  publisher       String?
+  isbn            String?    @unique
+  description     String?
+  coverImage      String?
+  price           Float
+  category        String?
+  tags            String[]   // For recommendations
+  createdAt       DateTime   @default(now())
+
+  copies          ItemCopy[]
+  reviews         Review[]
+}
+
+enum ItemType {
+  BOOK
+  JOURNAL
+  MULTIMEDIA
+}
+
+model ItemCopy {
+  id              String      @id @default(auto()) @map("_id")
+  itemId          String
+  branch          String
+  status          CopyStatus  @default(AVAILABLE)
+
+  item            Item        @relation(fields: [itemId])
+  borrowings      Borrowing[]
+  reservations    Reservation[]
+}
+
+enum CopyStatus {
+  AVAILABLE
+  BORROWED
+  RESERVED
+  LOST
+  DAMAGED
+  UNDER_REPAIR
+}
+
+model Borrowing {
+  id              String     @id @default(auto()) @map("_id")
+  userId          String
+  itemCopyId      String
+  borrowedAt      DateTime   @default(now())
+  dueDate         DateTime
+  returnedAt      DateTime?
+  autoExtended    Boolean    @default(false)
+
+  user            User       @relation(fields: [userId])
+  itemCopy        ItemCopy   @relation(fields: [itemCopyId])
+  fine            Fine?
+}
+
+model Reservation {
+  id              String             @id @default(auto()) @map("_id")
+  userId          String
+  itemCopyId      String
+  reservedAt      DateTime           @default(now())
+  status          ReservationStatus  @default(PENDING)
+
+  user            User               @relation(fields: [userId])
+  itemCopy        ItemCopy           @relation(fields: [itemCopyId])
+}
+
+enum ReservationStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+  EXPIRED
+}
+
+model Fine {
+  id              String     @id @default(auto()) @map("_id")
+  userId          String
+  borrowingId     String
+  amount          Float
+  reason          String?
+  paid            Boolean    @default(false)
+  issuedAt        DateTime   @default(now())
+
+  user            User       @relation(fields: [userId])
+  borrowing       Borrowing  @relation(fields: [borrowingId])
+}
+
+model Notification {
+  id              String     @id @default(auto()) @map("_id")
+  userId          String
+  message         String
+  read            Boolean    @default(false)
+  createdAt       DateTime   @default(now())
+
+  user            User       @relation(fields: [userId])
+}
+
+model Review {
+  id              String   @id @default(auto()) @map("_id")
+  userId          String
+  itemId          String
+  rating          Int      // 1 to 5
+  comment         String?
+  createdAt       DateTime @default(now())
+
+  user            User     @relation(fields: [userId])
+  item            Item     @relation(fields: [itemId])
+}
+
+model ReadingChallenge {
+  id              String   @id @default(auto()) @map("_id")
+  userId          String   @unique
+  year            Int
+  booksRead       Int      @default(0)
+  points          Int      @default(0)
+
+  user            User     @relation(fields: [userId])
+}
+
+model RoleConfig {
+  id                  String   @id @default(auto()) @map("_id")
+  role                Role     @unique
+  borrowLimit         Int
+  borrowDurationDays  Int
+  seasonalOverride    Boolean  @default(false)
+}
+
+model InterLibraryRequest {
+  id              String   @id @default(auto()) @map("_id")
+  requesterId     String
+  sourceBranch    String
+  targetBranch    String
+  itemTitle       String
+  status          InterLibraryStatus @default(PENDING)
+  createdAt       DateTime @default(now())
+
+  requester       User     @relation(fields: [requesterId])
+}
+
+enum InterLibraryStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  COMPLETED
+}

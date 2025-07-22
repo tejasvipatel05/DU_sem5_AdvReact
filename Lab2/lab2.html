@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><title>Change Background Color</title></head>
+<body>
+  <button onclick="document.body.style.backgroundColor = getRandomColor()">
+    Change Background Color
+  </button>
+
+  <script>
+    function getRandomColor() {
+      const letters = "0123456789ABCDEF";
+      let color = "#";
+      for(let i=0; i<6; i++) {
+        color += letters[Math.floor(Math.random()*16)];
+      }
+      return color;
+    }
+  </script>
+</body>
+</html>
+
+
+//////////////////////////////////
+
+<!DOCTYPE html>
+<html lang="en">
+<head><title>Mouse Event Recognizer</title></head>
+<body>
+  <div id="box" style="width:200px;height:150px;background:#eee;line-height:150px;text-align:center;margin:20px auto;border:1px solid #ccc;">
+    Click or move mouse here
+  </div>
+  <p id="output"></p>
+
+  <script>
+    const box = document.getElementById("box");
+    const output = document.getElementById("output");
+
+    const events = ["click", "dblclick", "mousedown", "mouseup", "mouseenter", "mouseleave", "mousemove"];
+
+    events.forEach(event => {
+      box.addEventListener(event, e => {
+        output.textContent = `Mouse event fired: ${e.type}`;
+      });
+    });
+  </script>
+</body>
+</html>
+  
+
+///////////////////////////////////
+
+<!DOCTYPE html>
+<html lang="en">
+<head><title>Keyboard Event Recognizer</title></head>
+<body>
+  <input type="text" placeholder="Type here" id="input" style="width:300px;padding:10px;font-size:1.2rem;">
+  <p id="out"></p>
+
+  <script>
+    const input = document.getElementById("input");
+    const out = document.getElementById("out");
+
+    ["keydown", "keypress", "keyup"].forEach(ev => {
+      input.addEventListener(ev, e => {
+        out.textContent = `Keyboard event fired: ${e.type} (Key: "${e.key}")`;
+      });
+    });
+  </script>
+</body>
+</html>
+
+
+/////////////////////////////////////
+
+<!DOCTYPE html>
+<html lang="en">
+<head><title>Form Event Recognizer</title></head>
+<body>
+  <form id="myForm">
+    <input type="text" placeholder="Enter text" id="txt" />
+    <button type="submit">Submit</button>
+  </form>
+  <p id="output"></p>
+
+  <script>
+    const form = document.getElementById("myForm");
+    const input = document.getElementById("txt");
+    const output = document.getElementById("output");
+
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+      output.textContent = "Form event fired: submit";
+    });
+
+    input.addEventListener("focus", () => output.textContent = "Form event fired: focus");
+    input.addEventListener("blur", () => output.textContent = "Form event fired: blur");
+    input.addEventListener("change", () => output.textContent = "Form event fired: change");
+    input.addEventListener("input", () => output.textContent = "Form event fired: input");
+  </script>
+</body>
+</html>
+
+
+/////////////////////////////////////
+
+<!DOCTYPE html>
+<html lang="en">
+<head><title>Change Element Properties</title></head>
+<body>
+  <h2 id="heading">This is a heading</h2>
+  <button onclick="changeProperties()">Change Style</button>
+
+  <script>
+    function changeProperties() {
+      const h = document.getElementById("heading");
+      h.style.color = "crimson";
+      h.style.fontSize = "3rem";
+      h.textContent = "Heading changed with JavaScript!";
+    }
+  </script>
+</body>
+</html>
+
+
+//////////////////////////////////////
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Student Registration</title>
+</head>
+<body>
+  <form onsubmit="return validateStudentForm()">
+    <label>Username: <input type="text" id="username" /></label><br/><br/>
+    <label>Password: <input type="password" id="password" /></label><br/><br/>
+    <label>Repeat Password: <input type="password" id="repeatPassword" /></label><br/><br/>
+    <label>DOB: <input type="date" id="dob" /></label><br/><br/>
+    <label>Enrollment No: <input type="text" id="enrollment" /></label><br/><br/>
+    <label>Email: <input type="email" id="email" /></label><br/><br/>
+    <button type="submit">Register</button>
+    <p id="error" style="color:red;"></p>
+  </form>
+
+  <script>
+    function validateStudentForm() {
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value;
+      const repeatPassword = document.getElementById("repeatPassword").value;
+      const dob = document.getElementById("dob").value;
+      const enrollment = document.getElementById("enrollment").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const error = document.getElementById("error");
+
+      error.textContent = "";
+
+      if(username.length < 8) {
+        error.textContent = "Username must be minimum 8 characters.";
+        return false;
+      }
+
+      if(!/^(?=.*\d)(?=.*[\W_]).{8,12}$/.test(password)) {
+        error.textContent = "Password must have 1 digit, 1 special char, 8-12 chars.";
+        return false;
+      }
+
+      if(password !== repeatPassword) {
+        error.textContent = "Passwords do not match.";
+        return false;
+      }
+
+      if(!dob) {
+        error.textContent = "Please select date of birth.";
+        return false;
+      }
+
+      const birth = new Date(dob);
+      const today = new Date();
+      let age = today.getFullYear() - birth.getFullYear();
+      const m = today.getMonth() - birth.getMonth();
+      if(m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
+      if(age < 18) {
+        error.textContent = "Age must be greater than 18.";
+        return false;
+      }
+
+      if(!/^\d{11}$/.test(enrollment)) {
+        error.textContent = "Enrollment must be exactly 11 digits.";
+        return false;
+      }
+
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        error.textContent = "Invalid email format.";
+        return false;
+      }
+
+      alert("Registration successful!");
+      return true;
+    }
+  </script>
+</body>
+</html>
+
+
+//////////////////////////////////////
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Array CRUD Operations</title>
+</head>
+<body>
+  <h2>Array CRUD Demo</h2>
+  <input type="text" id="itemInput" placeholder="Enter item" />
+  <button onclick="addItem()">Add</button>
+  <button onclick="updateItem()">Update</button>
+  <button onclick="deleteItem()">Delete</button>
+  <input type="number" id="indexInput" placeholder="Index" style="width:60px;" />
+
+  <h3>Array Items:</h3>
+  <ul id="list"></ul>
+
+  <script>
+    let arr = [];
+
+    function render() {
+      const list = document.getElementById("list");
+      list.innerHTML = "";
+      arr.forEach((item, i) => {
+        const li = document.createElement("li");
+        li.textContent = `Index ${i}: ${item}`;
+        list.appendChild(li);
+      });
+    }
+
+    function addItem() {
+      const val = document.getElementById("itemInput").value.trim();
+      if(val === "") return alert("Please enter an item.");
+      arr.push(val);
+      render();
+    }
+
+    function updateItem() {
+      const val = document.getElementById("itemInput").value.trim();
+      const idx = parseInt(document.getElementById("indexInput").value);
+      if(isNaN(idx) || idx < 0 || idx >= arr.length) return alert("Invalid index.");
+      if(val === "") return alert("Please enter an item.");
+      arr[idx] = val;
+      render();
+    }
+
+    function deleteItem() {
+      const idx = parseInt(document.getElementById("indexInput").value);
+      if(isNaN(idx) || idx < 0 || idx >= arr.length) return alert("Invalid index.");
+      arr.splice(idx, 1);
+      render();
+    }
+
+    render();
+  </script>
+</body>
+</html>
+
+
+///////////////////////////////////////
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Mouse & Keyboard Events</title>
+</head>
+<body>
+  <h3>Press any key and watch the console output</h3>
+  <input type="text" id="input" placeholder="Focus here and press keys" style="width:300px;padding:8px;font-size:1rem;" />
+  <p id="message"></p>
+
+  <script>
+    const input = document.getElementById("input");
+    const message = document.getElementById("message");
+
+    input.addEventListener("keydown", e => {
+      message.textContent = `Key code: ${e.keyCode}, Key: "${e.key}"`;
+
+      const vowels = ['a','e','i','o','u'];
+      if (vowels.includes(e.key.toLowerCase())) {
+        alert("Vowel key pressed!");
+      }
+    });
+
+    input.addEventListener("keyup", () => {
+      document.body.style.backgroundColor = "blue";
+      setTimeout(() => {
+        document.body.style.backgroundColor = "";
+      }, 1000); // revert after 1 sec
+    });
+  </script>
+</body>
+</html>
+
+
+////////////////////////////////////////

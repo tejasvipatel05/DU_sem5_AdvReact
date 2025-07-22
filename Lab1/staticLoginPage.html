@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login Page</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #6b73ff 0%, #000dff 100%);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    form {
+      background: white;
+      padding: 40px 30px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      width: 320px;
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 25px;
+      color: #333;
+    }
+    label {
+      display: block;
+      margin: 15px 0 5px 0;
+      font-weight: 600;
+      text-align: left;
+      color: #555;
+    }
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: 1.5px solid #ccc;
+      transition: border-color 0.3s ease;
+    }
+    input[type="text"]:focus,
+    input[type="password"]:focus {
+      border-color: #000dff;
+      outline: none;
+    }
+    button {
+      margin-top: 25px;
+      width: 100%;
+      padding: 12px;
+      font-size: 1.1rem;
+      background-color: #000dff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #4b57ff;
+    }
+    #loginError {
+      margin-top: 15px;
+      font-weight: 600;
+      color: #d93025;
+      min-height: 1.3em;
+    }
+  </style>
+</head>
+<body>
+
+  <form onsubmit="return checkLogin()">
+    <h2>Login Form</h2>
+    <label for="username">Username:</label>
+    <input type="text" id="username" autocomplete="off" />
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" autocomplete="off" />
+
+    <button type="submit">Login</button>
+    <p id="loginError"></p>
+  </form>
+
+  <script>
+    function checkLogin() {
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const errorElem = document.getElementById("loginError");
+
+      // Clear previous error
+      errorElem.textContent = "";
+
+      if (!username) {
+        errorElem.textContent = "Please enter your username.";
+        return false;
+      }
+      if (!password) {
+        errorElem.textContent = "Please enter your password.";
+        return false;
+      }
+
+      // Hardcoded credentials check
+      if (username === "admin" && password === "admin123") {
+        alert("Login successful!");
+        return true;
+      } else {
+        errorElem.textContent = "Invalid credentials!";
+        return false;
+      }
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>User Registration Form</title>
+  <style>
+    body {
+      background: #f2f2f2;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+    form {
+      background: white;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      width: 400px;
+    }
+    h2 {
+      margin-bottom: 20px;
+      text-align: center;
+      color: #333;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: 600;
+      color: #555;
+    }
+    input[type="text"],
+    input[type="password"],
+    input[type="date"],
+    input[type="email"] {
+      width: 100%;
+      padding: 10px 12px;
+      margin-top: 5px;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: 1.5px solid #ccc;
+      transition: border-color 0.3s ease;
+      box-sizing: border-box;
+    }
+    input[type="text"]:focus,
+    input[type="password"]:focus,
+    input[type="date"]:focus,
+    input[type="email"]:focus {
+      border-color: #007bff;
+      outline: none;
+    }
+    button {
+      margin-top: 25px;
+      width: 100%;
+      padding: 12px;
+      font-size: 1.1rem;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #error {
+      margin-top: 15px;
+      font-weight: 600;
+      color: #d93025;
+      min-height: 1.4em;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <form id="registerForm" onsubmit="return validateForm()">
+    <h2>User Registration</h2>
+    <label>Username:</label>
+    <input type="text" id="username" autocomplete="off" />
+
+    <label>Password:</label>
+    <input type="password" id="password" />
+
+    <label>Repeat Password:</label>
+    <input type="password" id="repeatPassword" />
+
+    <label>Date of Birth:</label>
+    <input type="date" id="dob" />
+
+    <label>Enrollment Number:</label>
+    <input type="text" id="enrollment" autocomplete="off" />
+
+    <label>Email:</label>
+    <input type="email" id="email" />
+
+    <button type="submit">Submit</button>
+    <p id="error"></p>
+  </form>
+
+  <script>
+    function validateForm() {
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value;
+      const repeatPassword = document.getElementById("repeatPassword").value;
+      const dob = document.getElementById("dob").value;
+      const enrollment = document.getElementById("enrollment").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const error = document.getElementById("error");
+
+      error.textContent = "";
+
+      // Username
+      if (username.length < 8) {
+        error.textContent = "Username must be at least 8 characters.";
+        return false;
+      }
+
+      // Password: at least one digit and one special character, 8–12 chars
+      const passwordRegex = /^(?=.*\d)(?=.*[\W_]).{8,12}$/;
+      if (!passwordRegex.test(password)) {
+        error.textContent = "Password must contain at least one digit, one special character and be 8-12 characters long.";
+        return false;
+      }
+
+      // Repeat password match
+      if (password !== repeatPassword) {
+        error.textContent = "Passwords do not match.";
+        return false;
+      }
+
+      // Age calculation
+      if (!dob) {
+        error.textContent = "Please select your date of birth.";
+        return false;
+      }
+      const birthDate = new Date(dob);
+      const today = new Date();
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const monthDiff = today.getMonth() - birthDate.getMonth();
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+      if (age < 18) {
+        error.textContent = "You must be at least 18 years old.";
+        return false;
+      }
+
+      // Enrollment number validation
+      if (!/^\d{11}$/.test(enrollment)) {
+        error.textContent = "Enrollment number must be exactly 11 digits.";
+        return false;
+      }
+
+      // Email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        error.textContent = "Invalid email format.";
+        return false;
+      }
+
+      error.textContent = "";
+      alert("Form submitted successfully!");
+      return true;
+    }
+  </script>
+
+</body>
+</html>
