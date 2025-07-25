@@ -58,7 +58,7 @@ function Navigation() {
             </div>
             <div>
               <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent">
-                ✨ Enchanted Library
+                ✨ Readify
               </h1>
               <p className="text-gray-600 font-medium">Where knowledge meets magic ⚡</p>
             </div>
